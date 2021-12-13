@@ -41,6 +41,7 @@ function checkStr(str) {
       }
     }
   }
+  incomplete.push(str);
   return 0;
 }
 
@@ -51,3 +52,42 @@ function sumErrors() {
 }
 
 ///////////////////////
+
+let incomplete = [];
+sumErrors();
+
+function scoreCompletionStr(str) {
+  let rev = str.split("").reverse().join("");
+  let totalScore = 0;
+  for (let i = 0, score; i < rev.length; i++) {
+    switch (rev[i]) {
+      case "(":
+        score = 1;
+        break;
+      case "[":
+        score = 2;
+        break;
+      case "{":
+        score = 3;
+        break;
+      case "<":
+        score = 4;
+        break;
+      default:
+        console.log('error');
+        break;
+    }
+    totalScore = (totalScore * 5) + score;
+  }
+  return totalScore;
+}
+
+function getMiddleCompletionScore() {
+  let scores = [];
+  for (let i = 0; i < incomplete.length; i++) {
+    scores.push(scoreCompletionStr(incomplete[i]));
+  }
+  let sorted = scores.sort((a,b) => a-b);
+  let middleIndex = Math.floor(sorted.length / 2);
+  return sorted[middleIndex];
+}
