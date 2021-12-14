@@ -71,11 +71,32 @@ function flash(flashes, flashedDumbos) {
   }
 }
 
-function step100Times() {
+function stepXTimes(x) {
   let total = 0;
-  for (let i = 0; i < 100; i++) {
-    total += step(dumbos);
+  for (let i = 0; i < x; i++) {
+    total += step();
   }
   return total;
 }
-console.log("total flashes after 100 steps: " + step100Times());
+// console.log("total flashes after 100 steps: " + stepXTimes(100));
+
+/////////////////
+
+function stepUntilSynced() {
+  let counter = 0;
+  while (!isAllZeros()) {
+    step();
+    counter++;
+  }
+  return counter;
+}
+
+function isAllZeros() {
+  for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < 10; j++) {
+      if (dumbos[i][j] !== 0) return false;
+    }
+  }
+  console.log("all zeros");
+  return true;
+}
