@@ -80,7 +80,14 @@ function visualizeDots(dotsArr) {
     if (x > maxX) maxX = x;
     if (y > maxY) maxY = y;
   }
-  let visualized = new Array(maxY+1).fill(new Array(maxX+1).fill("."));
+  let visualized = [];
+  for (let i = 0, row; i <= maxY; i++) {
+    row = [];
+    for (let j = 0; j <= maxX; j++) {
+      row.push(".");
+    }
+    visualized.push(row);
+  }
   for (let i = 0, x, y; i < dotsArr.length; i++) {
     [x,y] = dotsArr[i];
     visualized[y][x] = "#";
@@ -89,93 +96,11 @@ function visualizeDots(dotsArr) {
 }
 
 //visualizeDots(foldedDots);
-// 0: (39) ['#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#']
-// 1: (39) ['#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#']
-// 2: (39) ['#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#']
-// 3: (39) ['#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#']
-// 4: (39) ['#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#']
-// 5: (39) ['#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#', '.', '#', '#', '#', '#']
-// I'm on the right track. I need to rewrite this to see how many dots are stacked on each spot
+// 0: (39) ['.', '#', '#', '.', '.', '.', '.', '#', '#', '.', '#', '.', '.', '#', '.', '.', '#', '#', '.', '.', '#', '#', '#', '#', '.', '#', '.', '.', '#', '.', '#', '.', '.', '#', '.', '#', '.', '.', '#']
+// 1: (39) ['#', '.', '.', '#', '.', '.', '.', '.', '#', '.', '#', '.', '.', '#', '.', '#', '.', '.', '#', '.', '.', '.', '.', '#', '.', '#', '.', '.', '#', '.', '#', '.', '#', '.', '.', '#', '.', '.', '#']
+// 2: (39) ['#', '.', '.', '.', '.', '.', '.', '.', '#', '.', '#', '#', '#', '#', '.', '#', '.', '.', '#', '.', '.', '.', '#', '.', '.', '#', '#', '#', '#', '.', '#', '#', '.', '.', '.', '#', '.', '.', '#']
+// 3: (39) ['#', '.', '.', '.', '.', '.', '.', '.', '#', '.', '#', '.', '.', '#', '.', '#', '#', '#', '#', '.', '.', '#', '.', '.', '.', '#', '.', '.', '#', '.', '#', '.', '#', '.', '.', '#', '.', '.', '#']
+// 4: (39) ['#', '.', '.', '#', '.', '#', '.', '.', '#', '.', '#', '.', '.', '#', '.', '#', '.', '.', '#', '.', '#', '.', '.', '.', '.', '#', '.', '.', '#', '.', '#', '.', '#', '.', '.', '#', '.', '.', '#']
+// 5: (39) ['.', '#', '#', '.', '.', '.', '#', '#', '.', '.', '#', '.', '.', '#', '.', '#', '.', '.', '#', '.', '#', '#', '#', '#', '.', '#', '.', '.', '#', '.', '#', '.', '.', '#', '.', '.', '#', '#', '.']
 
-function foldWithDuplicates(dotsArr, foldAxis, valueToFoldOn) {
-  let newDots = [];
-  for (let i = 0, x, y, newValue; i < dotsArr.length; i++) {
-    [x,y] = dotsArr[i];
-    if (foldAxis === "x") {
-      if (x < valueToFoldOn) {
-        newDots.push([x,y]);
-      } else {
-        newValue = valueToFoldOn - (x - valueToFoldOn);
-        newDots.push([newValue,y]);
-      }
-    } else if (foldAxis === "y") {
-      if (y < valueToFoldOn) {
-        newDots.push([x,y]);
-      } else {
-        newValue = valueToFoldOn - (y - valueToFoldOn);
-        newDots.push([x,newValue]);
-      }
-    }
-  }
-  return newDots;
-}
-
-function foldAllWithDuplicates() {
-  let dots = JSON.parse(JSON.stringify(DOTS));
-  for (let i = 0, foldAxis, valueToFoldOn; i < FOLDS.length; i++) {
-    foldAxis = FOLDS[i][0];
-    valueToFoldOn = FOLDS[i][1];
-    dots = foldWithDuplicates(dots, foldAxis, valueToFoldOn);
-  }
-  return dots;
-}
-let foldedDotsWithDuplicates = foldAllWithDuplicates();
-
-function visualizeDotsWithDuplicates(dotsArr) {
-  let maxX = 0, maxY = 0;
-  for (let i = 0, x, y; i < dotsArr.length; i++) {
-    [x,y] = dotsArr[i];
-    if (x > maxX) maxX = x;
-    if (y > maxY) maxY = y;
-  }
-  let visualized = new Array(maxY+1).fill(new Array(maxX+1).fill("."));
-  for (let i = 0, x, y; i < dotsArr.length; i++) {
-    [x,y] = dotsArr[i];
-    if (visualized[y][x] === ".") {
-      visualized[y][x] = 1;
-    } else {
-      visualized[y][x]++;
-    }
-  }
-  return visualized;
-}
-visualizeDotsWithDuplicates(foldedDotsWithDuplicates);
-// 0: (39) [53, 8, 13, 20, '.', 4, 12, 14, 62, '.', 27, 5, 2, 56, '.', 37, 38, 14, 38, '.', 19, 42, 19, 32, '.', 37, '1', 15, 39, '.', 54, 6, 25, 16, '.', 32, 4, 14, 38]
-// 1: (39) [53, 8, 13, 20, '.', 4, 12, 14, 62, '.', 27, 5, 2, 56, '.', 37, 38, 14, 38, '.', 19, 42, 19, 32, '.', 37, '1', 15, 39, '.', 54, 6, 25, 16, '.', 32, 4, 14, 38]
-// 2: (39) [53, 8, 13, 20, '.', 4, 12, 14, 62, '.', 27, 5, 2, 56, '.', 37, 38, 14, 38, '.', 19, 42, 19, 32, '.', 37, '1', 15, 39, '.', 54, 6, 25, 16, '.', 32, 4, 14, 38]
-// 3: (39) [53, 8, 13, 20, '.', 4, 12, 14, 62, '.', 27, 5, 2, 56, '.', 37, 38, 14, 38, '.', 19, 42, 19, 32, '.', 37, '1', 15, 39, '.', 54, 6, 25, 16, '.', 32, 4, 14, 38]
-// 4: (39) [53, 8, 13, 20, '.', 4, 12, 14, 62, '.', 27, 5, 2, 56, '.', 37, 38, 14, 38, '.', 19, 42, 19, 32, '.', 37, '1', 15, 39, '.', 54, 6, 25, 16, '.', 32, 4, 14, 38]
-// 5: (39) [53, 8, 13, 20, '.', 4, 12, 14, 62, '.', 27, 5, 2, 56, '.', 37, 38, 14, 38, '.', 19, 42, 19, 32, '.', 37, '1', 15, 39, '.', 54, 6, 25, 16, '.', 32, 4, 14, 38]
-// hmmmmm... how are these capital letters?
-// decimal capitals are 65-90... these can be more
-// oct is 101-132... these can be less.. blast
-// 94, 92, 90, 127, 112, 92, 101, 88
-// maybe its the remainder of each 
-let dotSums = [94, 92, 90, 127, 112, 92, 101, 88];
-let remaind26 = [];
-for (let i = 0; i < 8; i++) {
-  remaind26.push(dotSums[i] % 26);
-}
-// [16, 14, 12, 23, 8, 14, 23, 10]
-const ABC = "0ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-let lettersMaybe = "";
-for (let i = 0; i < 8; i++) {
-  lettersMaybe += ABC[remaind26[i]];
-}
-//'PNLWHNWJ' truly amazing if this is right...
-// wrong.
-// maybe the 0 i put in the string gives an off by 1 error...
-// 'QOMXIOXK'
-// wrong.
-// I was really thinking instead of these numbers being the same on each row it would make a picture of the numbers in the 4x6 area..
-// did I do that part wrong somehow? their uniformity seems like confirmation I got it right.
+// CJHAZHKU!
